@@ -3,6 +3,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 
 from app.api.routes.addresses import router as addresses_router
+from app.api.routes.geolocation import geolocation_router
 from app.core.config import settings
 from app.core.exceptions import register_exception_handlers
 from app.core.logger import RequestLoggingMiddleware, get_logger, setup_logging
@@ -24,6 +25,7 @@ def create_app() -> FastAPI:
     register_exception_handlers(app)
 
     app.include_router(addresses_router)
+    app.include_router(geolocation_router, prefix="/geo", tags=["Geolocation"])
 
     @app.get("/health")
     def health() -> dict[str, str]:

@@ -3,23 +3,20 @@ from __future__ import annotations
 from collections.abc import Generator
 import sys
 from pathlib import Path
-from typing import Callable
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
+# Ensure `import app` works when running `pytest` from different working directories.
+ROOT_DIR = Path(__file__).resolve().parents[1]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 from app.db.base import Base
 from app.db.session import get_db as get_db_dependency
 from app.main import create_app
-
-
-ROOT_DIR = Path(__file__).resolve().parents[1]
-if str(ROOT_DIR) not in sys.path:
-    # Ensure `import app` works when running `pytest` from different working directories.
-    sys.path.insert(0, str(ROOT_DIR))
-
 
 @pytest.fixture()
 def client(tmp_path: Path) -> Generator[TestClient, None, None]:
